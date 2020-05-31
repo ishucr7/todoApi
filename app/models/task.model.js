@@ -1,4 +1,4 @@
-module.exports = (sequelize, Sequelize) => {
+module.exports = (sequelize, Sequelize, Label, Priority, Status) => {
     const Task = sequelize.define("task", {
         
         title: {
@@ -15,14 +15,26 @@ module.exports = (sequelize, Sequelize) => {
         status_id: {
             type: Sequelize.INTEGER,
             allowNull: false,
+            references: {
+                model: Status,
+                key: 'id',
+            }
         },
         label_id: {
             type: Sequelize.INTEGER,
             allowNull: false,
+            references: {
+                model: Label,
+                key: 'id',
+            }
         },
         priority_id: {
             type: Sequelize.INTEGER,
             allowNull: false,
+            references: {
+                model: Priority,
+                key: 'id',
+            }
         },
         due_date: {
             type: Sequelize.DATE
