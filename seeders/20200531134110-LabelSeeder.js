@@ -2,18 +2,28 @@
 
 module.exports = {
     up: (queryInterface, Sequelize) => {
+        queryInterface.bulkDelete('labels', null, {});
+
         return queryInterface.bulkInsert('labels', [
             {
-                'name': 'Personal'
+                'name': 'Personal',
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
-                'name': 'Work'
+                'name': 'Work',
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
-                'name': 'Shopping'
+                'name': 'Shopping',
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
-                'name': 'Others'
+                'name': 'Others',
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
         ], {});
   },

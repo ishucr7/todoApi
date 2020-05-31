@@ -42,6 +42,9 @@ module.exports = (sequelize, Sequelize, Label, Priority, Status) => {
         deletedAt: {
             type: Sequelize.DATE
         },
+    },
+    {
+        timestamps: true,
     });
   
     return Task;
