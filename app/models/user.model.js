@@ -11,7 +11,8 @@ module.exports = (sequelize, Sequelize, Role) => {
       },
       role_id: {
         type: Sequelize.INTEGER,
-        // allowNull: false,
+        allowNull: false,
+        defaultValue: 1,
         references: {
             model: Role,
             key: 'id',

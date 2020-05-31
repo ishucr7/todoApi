@@ -10,7 +10,7 @@ var corsOptions = {
 
 const db = require("./app/models/index.js");
 const Role = db.role;
-// db.sequelize.sync();
+db.sequelize.sync();
 
 app.use(cors(corsOptions));
 
@@ -21,10 +21,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Drop the tables and resync
-db.sequelize.sync({ force: true }).then(() => {
-    console.log("Drop and re-sync db.");
-    initial();
-});
+// db.sequelize.sync({ force: true }).then(() => {
+//     console.log("Drop and re-sync db.");
+//     initial();
+// });
 
 // simple route
 app.get("/", (req, res) => {
