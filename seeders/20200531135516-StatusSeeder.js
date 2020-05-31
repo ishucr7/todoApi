@@ -2,15 +2,22 @@
 
 module.exports = {
     up: (queryInterface, Sequelize) => {
+        queryInterface.bulkDelete('statuses', null, {});
         return queryInterface.bulkInsert('statuses', [
             {
-                'name': 'New'
+                'name': 'New',
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
-                'name': 'In Progress'
+                'name': 'In Progress',
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
-                'name': 'Completed'
+                'name': 'Completed',
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
         ], {});
   },

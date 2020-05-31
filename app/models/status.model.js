@@ -7,6 +7,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     {
         freezeTableName: true,
+        timestamps: true,
     });
   
     return Status;
