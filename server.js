@@ -9,7 +9,8 @@ var corsOptions = {
 };
 
 const db = require("./app/models/index.js");
-// db.sequelize.sync();
+const Role = db.role;
+db.sequelize.sync();
 
 app.use(cors(corsOptions));
 
@@ -29,6 +30,9 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to bezkoder application." });
 });
 
+require('./app/routes/auth.routes')(app);
+require('./app/routes/user.routes')(app);
+
 // set port, listen for requests
 const PORT = process.env.PORT || 8000;
 require("./app/routes/task.routes")(app);
@@ -37,3 +41,14 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
 
+function initial() {
+  Role.create({
+    id: 1,
+    name: "user"
+  });
+ 
+  Role.create({
+    id: 2,
+    name: "admin"
+  });
+}

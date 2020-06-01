@@ -23,7 +23,12 @@ db.sequelize = sequelize;
 db.labels = require("./label.model.js")(sequelize, Sequelize);
 db.statuses = require("./status.model.js")(sequelize, Sequelize);
 db.priorities = require("./priority.model.js")(sequelize, Sequelize);
+db.role = require("../models/role.model.js")(sequelize, Sequelize);
+
+db.user = require("../models/user.model.js")(sequelize, Sequelize, db.role);
 db.tasks = require("./task.model.js")(sequelize, Sequelize, db.labels,
-    db.priorities, db.statuses);
+    db.priorities, db.statuses, db.user);
+
+db.ROLES = ["user", "admin"];
 
 module.exports = db;
