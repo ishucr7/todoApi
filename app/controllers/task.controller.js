@@ -1,5 +1,9 @@
 const db = require("../models");
 const Task = db.tasks;
+const Label = db.labels;
+const Status = db.statuses;
+const Priority = db.priorities;
+
 const Op = db.Sequelize.Op;
 
 async function create(req, res){
@@ -68,8 +72,33 @@ async function findOne(req, res) {
             });
         }
         else if(task.user_id == req.user_id){
-            res.send(task);
-        }
+            label = await Label.findOne({
+                where: {
+                    id: task.label_id,
+                }
+            });
+            status = await Status.findOne({
+                where: {
+                    id: task.status_id,
+                }
+            });           
+            priority = await Priority.findOne({
+                where: {
+                    id: task.priority_id,
+                }
+            });
+
+
+            res.send({
+                id: task.id,
+                title: task.title,
+                description: task.description,
+                due_date: task.due_date,
+                priority: priority.name,
+                label: label.name,
+                status: status.name
+              });    
+            }
         else{
             res.status(401).send({
                 message: "You're not allowed to access this task."
