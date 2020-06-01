@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 async function create(req, res){
 
     const data = req.body;
-
+    data.user_id = req.user_id;
     const data_task = {
         title: data.title,
         description: data.description,
@@ -33,11 +33,11 @@ async function create(req, res){
 async function findAll(req, res){
 
     const data = req.body;
-
+    console.log("User id is ", req.user_id);
     try{
         tasks = await Task.findAll({
             where : {
-                // user_id: data.user_id,
+                user_id: req.user_id,
             }
         });
         res.send(tasks);
@@ -55,8 +55,26 @@ async function findOne(req, res) {
     const id = req.params.id;
 
     try{
-        task = await Task.findByPk(id);
-        res.send(task);
+        task = await Task.findOne({
+            where: {
+                id: id,
+            }
+        });
+
+        // Check if the task belongs to the user.
+        if(!task){
+            res.status(401).send({
+                message: "There's no such task."
+            });
+        }
+        else if(task.user_id == req.user_id){
+            res.send(task);
+        }
+        else{
+            res.status(401).send({
+                message: "You're not allowed to access this task."
+            });
+        }
     }
     catch(err){
         res.status(500).send({
