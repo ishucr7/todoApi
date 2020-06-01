@@ -1,3 +1,4 @@
+const { authJwt } = require('../middlewares');
 module.exports = app => {
     const tasks = require("../controllers/task.controller.js");
   
@@ -18,5 +19,7 @@ module.exports = app => {
     // Delete a task with id
     router.delete("/:id", tasks.destroy);
     
-    app.use('/api/tasks', router);
+    app.use('/api/user/tasks', [authJwt.verifyToken]);
+    app.use('/api/user/tasks', router);
+
   };

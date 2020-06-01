@@ -8,10 +8,6 @@ module.exports = (sequelize, Sequelize, Label, Priority, Status, User) => {
         description: {
             type: Sequelize.STRING
         },
-        user_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-        },
         status_id: {
             type: Sequelize.INTEGER,
             allowNull: false,
