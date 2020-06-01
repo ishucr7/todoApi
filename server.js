@@ -23,7 +23,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Drop the tables and resync
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log("Drop and re-sync db.");
-//     initial();
 // });
 
 // simple route
@@ -36,6 +35,8 @@ require('./app/routes/user.routes')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8000;
+require("./app/routes/task.routes")(app);
+require("./app/routes/seeder.routes")(app);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
