@@ -1,9 +1,14 @@
 const db = require("../models");
 const Task = db.tasks;
+const Label = db.labels;
+const Status = db.statuses;
+const Priority = db.priorities;
+
 const Op = db.Sequelize.Op;
 
 async function create(req, res){
 
+    console.log("INSIDE API craete ", req.body);
     const data = req.body;
     data.user_id = req.user_id;
     const data_task = {
@@ -22,6 +27,7 @@ async function create(req, res){
         res.send(task);
     }
     catch(err){
+        console.log(err.message);
         res.status(500).send({
             status: "FAILURE",
             message:
@@ -40,6 +46,17 @@ async function findAll(req, res){
                 user_id: req.user_id,
             }
         });
+        // tasks.map(task => {
+        //     label = await Label.findByPk(task.label_id);
+        //     status = await Status.findByPk(task.status_id);
+        //     priority = await Priority.findByPk(task.label_id);
+        //     console.log(priority);
+        //     console.log(status);
+        //     console.log(label);
+        //     task.label = label.name;
+        //     task.priority = priority.name;
+        //     task.status = status.name;
+        // });
         res.send(tasks);
     }
     catch(err){
