@@ -4,6 +4,8 @@ const cors = require("cors");
 
 const app = express();
 
+require('dotenv').config();
+
 var corsOptions = {
   origin: "http://localhost:8081"
 };
@@ -24,15 +26,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     console.log("Drop and re-sync db.");
 // });
 
-
-// simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
+  res.json({ message: "Url not supported" });
 });
 
-// set port, listen for requests
+require('./app/routes/auth.routes')(app);
+require('./app/routes/user.routes')(app);
+require("./app/routes/task.routes")(app);
+require("./app/routes/seeder.routes")(app);
+
 const PORT = process.env.PORT || 8000;
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
-
