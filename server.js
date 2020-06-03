@@ -9,7 +9,7 @@ var corsOptions = {
 };
 
 const db = require("./app/models/index.js");
-db.sequelize.sync();
+// db.sequelize.sync();
 
 app.use(cors(corsOptions));
 
@@ -23,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log("Drop and re-sync db.");
 // });
+
 
 // simple route
 app.get("/", (req, res) => {
