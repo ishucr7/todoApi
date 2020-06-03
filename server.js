@@ -22,9 +22,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Drop the tables and resync
-db.sequelize.sync({ force: true }).then(() => {
-    console.log("Drop and re-sync db.");
-});
+// db.sequelize.sync({ force: true }).then(() => {
+//     console.log("Drop and re-sync db.");
+// });
 
 app.get("/", (req, res) => {
   res.json({ message: "Url not supported" });
@@ -34,6 +34,7 @@ require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
 require("./app/routes/task.routes")(app);
 require("./app/routes/seeder.routes")(app);
+require("./app/routes/team.routes")(app);
 
 const PORT = process.env.PORT || 8000;
 

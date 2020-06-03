@@ -18,6 +18,9 @@ module.exports = app => {
   
     // Delete a task with id
     router.delete("/:id", tasks.destroy);
+
+    // Retrieve all tasks belonging to a team
+    app.get("/api/user/tasks/team", tasks.findByTeam);
     
     app.use('/api/user/tasks', [authJwt.verifyToken]);
     app.use('/api/user/tasks', router);
