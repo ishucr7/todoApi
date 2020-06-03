@@ -7,10 +7,10 @@ module.exports = app => {
     router.get("/statuses", seeders.findAllStatuses);
 
     // Retrieve all
-    router.get("/priorities", seeders.findAllStatuses);
+    router.get("/priorities", seeders.findAllPriorities);
 
     // Retrieve all
-    router.get("/labels", seeders.findAllStatuses);
+    router.get("/labels", seeders.findAllLabels);
 
     app.use("/api", router)
 };
