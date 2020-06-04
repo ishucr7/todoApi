@@ -35,6 +35,7 @@ require('./app/routes/user.routes')(app);
 require("./app/routes/task.routes")(app);
 require("./app/routes/seeder.routes")(app);
 require("./app/routes/team.routes")(app);
+require("./app/routes/comment.routes")(app);
 
 const PORT = process.env.PORT || 8000;
 

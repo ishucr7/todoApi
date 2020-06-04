@@ -160,7 +160,7 @@ async function destroy(req, res){
 async function findByTeam(req, res) {
     console.log("Yo");
     const data = req.body;
-    user_id = data.user_id;
+    user_id = req.user_id;
 
     try{
         team = await Team.findOne({
@@ -201,11 +201,37 @@ async function findByTeam(req, res) {
     }
 };
 
+async function findByTitle(req, res) {
+    const data = req.body;
+    console.log("User id is ", req.user_id);
+    try{
+        tasks = await Task.findAll({
+            where : {
+                user_id: req.user_id,
+                title: {
+                    [Op.like]: '%' + data.title + '%'
+                }
+            }
+        });
+
+        res.send(tasks);
+    }
+    catch(err){
+        res.status(500).send({
+            status: "FAILURE",
+            message:
+                err.message || "DB error"
+        });
+    }
+};
+
+
 module.exports = {
     create,
     findAll,
     findOne,
     update,
     destroy,
-    findByTeam
+    findByTeam,
+    findByTitle
 }
