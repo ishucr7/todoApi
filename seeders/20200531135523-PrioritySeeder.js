@@ -8,17 +8,17 @@ module.exports = {
         queryInterface.bulkDelete('priorities', null, {});
         return queryInterface.bulkInsert('priorities', [
             {
-                name: 'New',
+                name: 'Low',
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
             {
-                name: 'In Progress',
+                name: 'Medium',
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
             {
-                name: 'Completed',
+                name: 'High',
                 createdAt: new Date(),
                 updatedAt: new Date()
             },

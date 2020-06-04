@@ -1,4 +1,4 @@
-module.exports = (sequelize, Sequelize, Label, Priority, Status, User) => {
+module.exports = (sequelize, Sequelize, Label, Priority, Status, User, Team) => {
     const Task = sequelize.define("task", {
         
         title: {
@@ -37,6 +37,20 @@ module.exports = (sequelize, Sequelize, Label, Priority, Status, User) => {
             allowNull: false,
             references: {
                 model: User,
+                key: 'id',
+            }
+        },
+        assignee_id: {
+            type: Sequelize.INTEGER,
+            references: {
+                model: User,
+                key: 'id',
+            }
+        },
+        team_id: {
+            type: Sequelize.INTEGER,
+            references: {
+                model: Team,
                 key: 'id',
             }
         },

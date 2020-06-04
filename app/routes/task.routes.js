@@ -18,6 +18,12 @@ module.exports = app => {
   
     // Delete a task with id
     router.delete("/:id", tasks.destroy);
+
+    // Retrieve all tasks belonging to a team
+    app.get("/api/user/tasks/team", [authJwt.verifyToken], tasks.findByTeam);
+
+    // Search task by title
+    app.get("/api/user/tasks/search", [authJwt.verifyToken], tasks.findByTitle);
     
     app.use('/api/user/tasks', [authJwt.verifyToken]);
     app.use('/api/user/tasks', router);
