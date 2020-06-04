@@ -5,6 +5,7 @@ const Status = db.statuses;
 const Priority = db.priorities;
 const Team = db.teams;
 const Team_User = db.team_user;
+
 const Op = db.Sequelize.Op;
 
 async function create(req, res){
@@ -48,18 +49,42 @@ async function findAll(req, res){
                 user_id: req.user_id,
             }
         });
-        // tasks.map(task => {
-        //     label = await Label.findByPk(task.label_id);
-        //     status = await Status.findByPk(task.status_id);
-        //     priority = await Priority.findByPk(task.label_id);
-        //     console.log(priority);
-        //     console.log(status);
-        //     console.log(label);
-        //     task.label = label.name;
-        //     task.priority = priority.name;
-        //     task.status = status.name;
-        // });
-        res.send(tasks);
+
+        labels = await Label.findAll();
+        label_map = {};
+        for(var i=0; i < labels.length; i++) {
+            id = labels[i].dataValues.id;
+            name = labels[i].dataValues.name;
+            label_map[id] = name;
+        } 
+
+        statuses = await Status.findAll();
+        status_map = {};
+        for(var i=0; i < statuses.length; i++) {
+            id = statuses[i].dataValues.id;
+            name = statuses[i].dataValues.name;
+            status_map[id] = name;
+        }
+
+        priorities = await Priority.findAll();
+        priority_map = {};
+        for(var i=0; i < priorities.length; i++) {
+            id = priorities[i].dataValues.id;
+            name = priorities[i].dataValues.name;
+            priority_map[id] = name;
+        } 
+
+        tasks_res = []
+        for (var i=0; i < tasks.length; i++) {
+            task = tasks[i].dataValues;
+            task["priority"] = priority_map[task["priority_id"]];
+            task["status"] = status_map[task["status_id"]];
+            task["label"] = label_map[task["label_id"]];
+            tasks_res.push(task);
+        }
+
+        res.send(tasks_res);
+
     }
     catch(err){
         res.status(500).send({
@@ -87,8 +112,29 @@ async function findOne(req, res) {
             });
         }
         else if(task.user_id == req.user_id){
-            res.send(task);
-        }
+            label = await Label.findOne({
+                where: {
+                    id: task.label_id,
+                }
+            });
+            status = await Status.findOne({
+                where: {
+                    id: task.status_id,
+                }
+            });           
+            priority = await Priority.findOne({
+                where: {
+                    id: task.priority_id,
+                }
+            });
+
+            task_res = task.dataValues;
+            task_res["priority"] = priority.name;
+            task_res["status"] = status.name;
+            task_res["label"] = label.name;
+            
+            res.send(task_res);    
+            }
         else{
             res.status(401).send({
                 message: "You're not allowed to access this task."

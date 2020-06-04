@@ -7,8 +7,9 @@ const Op = db.Sequelize.Op;
 async function findAllLabels(req, res){
 
     try{
-        tasks = await Label.findAll({});
-        res.send(tasks);
+        labels = await Label.findAll({});
+        console.log("INSIDE FINDALL  Labels    :::  " , labels);
+        res.send(labels);
     }
     catch(err){
         res.status(500).send({
@@ -41,6 +42,8 @@ async function findAllStatuses(req, res){
     console.log("ASDDSADS");
     try{
         statuses = await Status.findAll({});
+        console.log("INSIDE FINDALL  statuses    :::  " , statuses);
+
         res.send(statuses);
     }
     catch(err){
@@ -73,6 +76,7 @@ async function findAllPriorities(req, res){
 
     try{
         priorities = await Priority.findAll({});
+        console.log("INSIDE FINDALL  PRIORITIES    :::  " , priorities);
         res.send(priorities);
     }
     catch(err){
