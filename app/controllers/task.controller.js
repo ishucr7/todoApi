@@ -3,7 +3,8 @@ const Task = db.tasks;
 const Label = db.labels;
 const Status = db.statuses;
 const Priority = db.priorities;
-
+const Team = db.teams;
+const Team_User = db.team_user;
 const Op = db.Sequelize.Op;
 
 async function create(req, res){
@@ -19,7 +20,8 @@ async function create(req, res){
         label_id: data.label_id,
         priority_id: data.priority_id,
         due_date: data.due_date,
-        deletedAt: null,            
+        deletedAt: null,  
+        team_id: data.team_id          
     };
     
     try{
@@ -154,10 +156,82 @@ async function destroy(req, res){
     }
 };
 
+
+async function findByTeam(req, res) {
+    console.log("Yo");
+    const data = req.body;
+    user_id = req.user_id;
+
+    try{
+        team = await Team.findOne({
+            where: {
+                name: data.name,
+            }
+        });
+        team_id = team.dataValues.id;
+        console.log("team id: ", team_id);
+
+        // Check if the user belong to the team
+        user_check = await Team_User.findOne({
+            where: {
+                team_id: team_id,
+                user_id: user_id
+            }
+        });
+        if(!user_check){
+            res.status(401).send({
+                message: "You are not a member of this team."
+            });            
+        }
+
+        tasks = await Task.findAll({
+            where: {
+                team_id: team_id
+            }
+        });
+        
+        res.send(tasks);
+    }
+    catch(err){
+        res.status(500).send({
+            status: "FAILURE",
+            message:
+                err.message || "DB error"
+        });
+    }
+};
+
+async function findByTitle(req, res) {
+    const data = req.body;
+    console.log("User id is ", req.user_id);
+    try{
+        tasks = await Task.findAll({
+            where : {
+                user_id: req.user_id,
+                title: {
+                    [Op.like]: '%' + data.title + '%'
+                }
+            }
+        });
+
+        res.send(tasks);
+    }
+    catch(err){
+        res.status(500).send({
+            status: "FAILURE",
+            message:
+                err.message || "DB error"
+        });
+    }
+};
+
+
 module.exports = {
     create,
     findAll,
     findOne,
     update,
-    destroy
+    destroy,
+    findByTeam,
+    findByTitle
 }
