@@ -1,5 +1,6 @@
 const db = require("../models");
 const CommentController = require("./comment.controller");
+const emailController = require("./email.controller");
 const Task = db.tasks;
 const Label = db.labels;
 const Status = db.statuses;
@@ -26,11 +27,19 @@ async function create(req, res){
         priority_id: data.priority_id,
         due_date: data.due_date,
         deletedAt: null,  
-        team_id: data.team_id          
+        team_id: data.team_id,
+        assignee_id: data.assignee_id          
     };
     
     try{
         task = await Task.create(data_task);
+
+        if(data.assignee_id) {
+            user = await User.findByPk(data.assignee_id);
+            email = user.email;
+            emailController.sendEmail(email, task);
+        }
+
         res.send(task);
     }
     catch(err){
@@ -186,6 +195,7 @@ async function update(req, res){
         label_id: data.label_id,
         priority_id: data.priority_id,
         due_date: data.due_date,
+        assignee_id: data.assignee_id
     };
 
     console.log("Here is the data  " ,data);
@@ -201,6 +211,17 @@ async function update(req, res){
                 task_id: id,
             })
         }
+
+        task = await Task.findByPk(id);
+        prev_assignee_id = task.assignee_id;
+
+        // Send email to the new assignee
+        if(data.assignee_id != prev_assignee_id) {
+            user = await User.findByPk(data.assignee_id);
+            email = user.email;
+            emailController.sendEmail(email, task);
+        }
+        
         await Task.update(data_task,{
             where: {
                 id: id,
