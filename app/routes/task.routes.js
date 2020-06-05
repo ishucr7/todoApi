@@ -20,12 +20,13 @@ module.exports = app => {
     router.delete("/:id", tasks.destroy);
 
     // Retrieve all tasks belonging to a team
-    app.get("/api/team/:id/tasks", [authJwt.verifyToken], tasks.findByTeam);
+    app.get("/api/teams/:id/tasks", [authJwt.verifyToken], tasks.findByTeam);
 
     // Search task by title
     app.get("/api/user/tasks/search", [authJwt.verifyToken], tasks.findByTitle);
     
     app.use('/api/user/tasks', [authJwt.verifyToken]);
+    // app.use('/api/user/tasks' );
     app.use('/api/user/tasks', router);
 
   };

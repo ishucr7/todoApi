@@ -16,7 +16,7 @@ exports.adminBoard = (req, res) => {
 exports.getAllUsers = async (req, res) => {
   console.log("INSIDE GET ALL USERES");
   users = await User.findAll({
-    attributes: ['email', 'name', 'id'],
+    attributes: ['email', 'name', 'id',],
   });
   console.log(users);
   res.status(200).send(users);

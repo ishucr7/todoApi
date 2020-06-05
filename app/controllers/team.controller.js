@@ -76,7 +76,6 @@ async function getTeam(req, res) {
         team = await Team.findOne({
             where : {
                 id: team_id,
-                moderator_id: user_id,
             }
         });
         if(!team){
@@ -107,6 +106,7 @@ async function getTeam(req, res) {
         res.send({
             'Name': team.name,
             'user_list': user_list,
+            'user_ids': user_ids,
         });
         
     } catch (error) {

@@ -26,7 +26,8 @@ async function create(req, res){
         priority_id: data.priority_id,
         due_date: data.due_date,
         deletedAt: null,  
-        team_id: data.team_id          
+        team_id: data.team_id,
+        assignee_id: data.assignee_id,
     };
     
     try{
@@ -115,7 +116,15 @@ async function findOne(req, res) {
                 message: "There's no such task."
             });
         }
-        else if(task.user_id == req.user_id){
+        console.log("OOOOO  ", req.user_id);
+        console.log("OOOO  " , task.team_id);
+        isPartOfTeam = await Team_User.findOne({
+            where:{
+                team_id: task.team_id,
+                user_id: req.user_id
+            }
+        });
+        if(task.user_id == req.user_id || isPartOfTeam){
             label = await Label.findOne({
                 where: {
                     id: task.label_id,
@@ -186,6 +195,7 @@ async function update(req, res){
         label_id: data.label_id,
         priority_id: data.priority_id,
         due_date: data.due_date,
+        assignee_id: data.assignee_id,
     };
 
     console.log("Here is the data  " ,data);
@@ -275,7 +285,39 @@ async function findByTeam(req, res) {
             }
         });
         
-        res.send(tasks);
+        labels = await Label.findAll();
+        label_map = {};
+        for(var i=0; i < labels.length; i++) {
+            id = labels[i].dataValues.id;
+            name = labels[i].dataValues.name;
+            label_map[id] = name;
+        } 
+
+        statuses = await Status.findAll();
+        status_map = {};
+        for(var i=0; i < statuses.length; i++) {
+            id = statuses[i].dataValues.id;
+            name = statuses[i].dataValues.name;
+            status_map[id] = name;
+        }
+
+        priorities = await Priority.findAll();
+        priority_map = {};
+        for(var i=0; i < priorities.length; i++) {
+            id = priorities[i].dataValues.id;
+            name = priorities[i].dataValues.name;
+            priority_map[id] = name;
+        } 
+
+        tasks_res = []
+        for (var i=0; i < tasks.length; i++) {
+            task = tasks[i].dataValues;
+            task["priority"] = priority_map[task["priority_id"]];
+            task["status"] = status_map[task["status_id"]];
+            task["label"] = label_map[task["label_id"]];
+            tasks_res.push(task);
+        }
+        res.send(tasks_res);
     }
     catch(err){
         res.status(500).send({
