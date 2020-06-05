@@ -222,17 +222,27 @@ async function update(req, res){
 
 async function destroy(req, res){
     id = req.params.id;
+    const t = await sequelize.transaction();
     try{
+        await Comment.destroy({
+            where: {
+                task_id: id,
+            }
+        }, { transaction: t });
+
         await Task.destroy({
             where: {
                 id: id,
             }
-        });
+        }, { transaction: t });
+
+        await t.commit();
         res.send({
             "message": "Deleted the task"
         });
     }
     catch(err){
+        await t.rollback();
         res.status(500).send({
             status: "FAILURE",
             message:
