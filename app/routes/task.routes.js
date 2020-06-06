@@ -1,6 +1,7 @@
 const { authJwt } = require('../middlewares');
 module.exports = app => {
     const tasks = require("../controllers/task.controller.js");
+    const email = require("../controllers/email.controller.js");
   
     var router = require("express").Router();
   
@@ -20,12 +21,16 @@ module.exports = app => {
     router.delete("/:id", tasks.destroy);
 
     // Retrieve all tasks belonging to a team
-    app.get("/api/user/tasks/team", [authJwt.verifyToken], tasks.findByTeam);
+    app.get("/api/teams/:id/tasks", [authJwt.verifyToken], tasks.findByTeam);
 
     // Search task by title
     app.get("/api/user/tasks/search", [authJwt.verifyToken], tasks.findByTitle);
     
+    // app.post("/api/email", email.send);
+    // app.get("/api/task", tasks.sendReminder);
+
     app.use('/api/user/tasks', [authJwt.verifyToken]);
+    // app.use('/api/user/tasks' );
     app.use('/api/user/tasks', router);
 
   };

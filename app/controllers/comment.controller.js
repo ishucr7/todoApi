@@ -6,7 +6,6 @@ const Op = db.Sequelize.Op;
 
 async function create(req, res){
 
-    console.log("INSIDE API create ", req.body);
     const data = req.body;
     data.user_id = req.user_id;
     const comment_data = {
@@ -93,8 +92,32 @@ async function getAll(req, res){
     }
 };
 
+async function destroy(req, res){
+    id = req.params.id;
+
+    try{
+        await Comment.destroy({
+            where: {
+                id: id,
+            }
+        });
+
+        res.send({
+            "message": "Deleted the comment."
+        });
+    }
+    catch(err){
+        res.status(500).send({
+            status: "FAILURE",
+            message:
+                err.message || "DB error"
+        });
+    }
+};
+
 module.exports = {
     create,
     update,
-    getAll
+    getAll,
+    destroy
 }
