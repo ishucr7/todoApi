@@ -13,6 +13,9 @@ module.exports = app => {
     // Get all comments for a task
     router.get("/:id", comments.getAll);    
 
+    // Delete a task with id
+    router.delete("/:id", comments.destroy);    
+
     app.use('/api/user/comments', [authJwt.verifyToken]);
     app.use('/api/user/comments', router);
 

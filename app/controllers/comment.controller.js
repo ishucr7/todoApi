@@ -93,8 +93,32 @@ async function getAll(req, res){
     }
 };
 
+async function destroy(req, res){
+    id = req.params.id;
+
+    try{
+        await Comment.destroy({
+            where: {
+                id: id,
+            }
+        });
+
+        res.send({
+            "message": "Deleted the comment."
+        });
+    }
+    catch(err){
+        res.status(500).send({
+            status: "FAILURE",
+            message:
+                err.message || "DB error"
+        });
+    }
+};
+
 module.exports = {
     create,
     update,
-    getAll
+    getAll,
+    destroy
 }
