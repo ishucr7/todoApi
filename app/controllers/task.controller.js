@@ -13,8 +13,6 @@ const sequelize = db.sequelize;
 const Op = db.Sequelize.Op;
 
 async function create(req, res){
-
-    console.log("INSIDE API craete ", req.body);
     const data = req.body;
     data.user_id = req.user_id;
     const data_task = {
@@ -47,7 +45,6 @@ async function create(req, res){
 async function findAll(req, res){
 
     const data = req.body;
-    console.log("User id is ", req.user_id);
     try{
         tasks = await Task.findAll({
             where : {
@@ -116,8 +113,6 @@ async function findOne(req, res) {
                 message: "There's no such task."
             });
         }
-        console.log("OOOOO  ", req.user_id);
-        console.log("OOOO  " , task.team_id);
         isPartOfTeam = await Team_User.findOne({
             where:{
                 team_id: task.team_id,
@@ -155,18 +150,14 @@ async function findOne(req, res) {
             
             task_res["oldComments"] = [];
             oldComments.forEach(async element => {
-                console.log('INSIDEIDEDIDIE   ', element);
                 user_c = await User.findByPk(element.created_by_id);
-                console.log(user_c);
                 task_res["oldComments"].push({
                     'body': element.body,
                     'user_name': user_c.name,
                 });
-                console.log(task_res["oldComments"]);
 
             });
 
-            console.log(" SENDING OLD COMMENTS " , task_res["oldComments"]);
             res.send(task_res);    
             }
         else{
@@ -198,19 +189,9 @@ async function update(req, res){
         assignee_id: data.assignee_id,
     };
 
-    console.log("Here is the data  " ,data);
     const t = await sequelize.transaction();
 
     try{
-        // Handle the comment in here itself.
-        console.log("Here is my new comment ", data.newComment);
-        if(data.newComment){
-            await Comment.create({
-                body: data.newComment,
-                created_by_id: req.user_id,
-                task_id: id,
-            })
-        }
         await Task.update(data_task,{
             where: {
                 id: id,
@@ -253,7 +234,6 @@ async function destroy(req, res){
 
 
 async function findByTeam(req, res) {
-    console.log("Yo");
     const data = req.body;
     user_id = req.user_id;
 
@@ -264,7 +244,6 @@ async function findByTeam(req, res) {
             }
         });
         team_id = team.dataValues.id;
-        console.log("team id: ", team_id);
 
         // Check if the user belong to the team
         user_check = await Team_User.findOne({
@@ -333,8 +312,6 @@ async function findByTitle(req, res) {
     const data = {
         'title': req.query.title,
     };
-    console.log(data);
-    console.log("User id is asdasd ", req.user_id);
     try{
         tasks = await Task.findAll({
             where : {

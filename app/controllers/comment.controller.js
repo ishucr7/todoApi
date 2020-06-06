@@ -6,7 +6,6 @@ const Op = db.Sequelize.Op;
 
 async function create(req, res){
 
-    console.log("INSIDE API create ", req.body);
     const data = req.body;
     data.user_id = req.user_id;
     const comment_data = {
