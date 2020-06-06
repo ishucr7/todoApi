@@ -11,7 +11,7 @@ module.exports = {
         "dialect": "mysql"
     },
     "production": {
-        "username": "b2ba0df7e00ea9",
+        "user": "b2ba0df7e00ea9",
         "password": "cd0ae547",
         "database": "heroku_fa6b01fbc3fd92f",
         "host": "us-cdbr-east-05.cleardb.net",
