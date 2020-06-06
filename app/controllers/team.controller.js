@@ -9,7 +9,6 @@ const sequelize = db.sequelize;
 
 async function create(req, res){
 
-    console.log("INSIDE TEAM API create ", req.body);
     const data = req.body;
     data.user_id = req.user_id;
 
@@ -37,7 +36,6 @@ async function create(req, res){
         // team_users.push(team_user.dataValues);
 
         for(var i=0; i < user_list.length; i++){
-            console.log(user_list[i]);
             user = await User.findOne({
                 where: {
                   email: String(user_list[i])
@@ -54,7 +52,6 @@ async function create(req, res){
                  { transaction: t });
             team_users.push(team_user.dataValues);
         }
-        console.log(team_users)
         await t.commit();
         res.send(team);
     }
@@ -77,7 +74,6 @@ async function getTeam(req, res) {
         team = await Team.findOne({
             where : {
                 id: team_id,
-                moderator_id: user_id,
             }
         });
         if(!team){
@@ -100,14 +96,12 @@ async function getTeam(req, res) {
                     id: user_ids[i].user_id,
                 }
             });
-            console.log(user_ids[i].team_id, " : ", user_ids[i].user_id);
             user_list.push(user.email);
         }
-        console.log("team id is ", team_id);
-        console.log("Getting team, " , user_list);
         res.send({
             'Name': team.name,
             'user_list': user_list,
+            'user_ids': user_ids,
         });
         
     } catch (error) {
@@ -141,7 +135,6 @@ async function getAll(req, res) {
                 }
             });
             moderator_user = await User.findByPk(team.moderator_id);
-            console.log(team.dataValues);
             teams.push({
                 ...team.dataValues,
                 moderator_name: moderator_user.name});

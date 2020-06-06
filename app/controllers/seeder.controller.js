@@ -8,7 +8,7 @@ async function findAllLabels(req, res){
 
     try{
         labels = await Label.findAll({});
-        console.log("INSIDE FINDALL  Labels    :::  " , labels);
+        // console.log("INSIDE FINDALL  Labels    :::  " , labels);
         res.send(labels);
     }
     catch(err){
@@ -39,11 +39,8 @@ async function findOneLabel(req, res) {
 
 async function findAllStatuses(req, res){
 
-    console.log("ASDDSADS");
     try{
         statuses = await Status.findAll({});
-        console.log("INSIDE FINDALL  statuses    :::  " , statuses);
-
         res.send(statuses);
     }
     catch(err){
@@ -76,7 +73,6 @@ async function findAllPriorities(req, res){
 
     try{
         priorities = await Priority.findAll({});
-        console.log("INSIDE FINDALL  PRIORITIES    :::  " , priorities);
         res.send(priorities);
     }
     catch(err){
