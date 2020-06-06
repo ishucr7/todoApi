@@ -1,5 +1,6 @@
 const db = require("../models");
 const CommentController = require("./comment.controller");
+const emailController = require("./email.controller");
 const Task = db.tasks;
 const Label = db.labels;
 const Status = db.statuses;
@@ -25,11 +26,18 @@ async function create(req, res){
         due_date: data.due_date,
         deletedAt: null,  
         team_id: data.team_id,
-        assignee_id: data.assignee_id,
+        assignee_id: data.assignee_id          
     };
     
     try{
         task = await Task.create(data_task);
+
+        if(data.assignee_id) {
+            user = await User.findByPk(data.assignee_id);
+            email = user.email;
+            emailController.sendEmail(email, task);
+        }
+
         res.send(task);
     }
     catch(err){
@@ -186,12 +194,23 @@ async function update(req, res){
         label_id: data.label_id,
         priority_id: data.priority_id,
         due_date: data.due_date,
-        assignee_id: data.assignee_id,
+        assignee_id: data.assignee_id
     };
 
     const t = await sequelize.transaction();
 
     try{
+
+        task = await Task.findByPk(id);
+        prev_assignee_id = task.assignee_id;
+
+        // Send email to the new assignee
+        if(data.assignee_id != prev_assignee_id) {
+            user = await User.findByPk(data.assignee_id);
+            email = user.email;
+            emailController.sendEmail(email, task);
+        }
+        
         await Task.update(data_task,{
             where: {
                 id: id,
@@ -213,17 +232,27 @@ async function update(req, res){
 
 async function destroy(req, res){
     id = req.params.id;
+    const t = await sequelize.transaction();
     try{
+        await Comment.destroy({
+            where: {
+                task_id: id,
+            }
+        }, { transaction: t });
+
         await Task.destroy({
             where: {
                 id: id,
             }
-        });
+        }, { transaction: t });
+
+        await t.commit();
         res.send({
             "message": "Deleted the task"
         });
     }
     catch(err){
+        await t.rollback();
         res.status(500).send({
             status: "FAILURE",
             message:

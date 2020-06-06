@@ -2,7 +2,8 @@ const db = require("../models");
 const Team = db.teams;
 const Team_User = db.team_user;
 const User = db.user;
-
+const Task = db.tasks;
+const Comment = db.comments;
 const Op = db.Sequelize.Op;
 const sequelize = db.sequelize;
 
@@ -150,8 +151,61 @@ async function getAll(req, res) {
     }
 }
 
+async function destroy(req, res){
+    id = req.params.id;
+    const t = await sequelize.transaction();
+    try{
+
+        tasks = await Task.findAll({
+            where: {
+                team_id: id
+            }
+        });
+
+        for(var i=0; i<tasks.length; i++){
+            await Comment.destroy({
+                where: {
+                    task_id: tasks[i].dataValues.id,
+                }
+            }, { transaction: t });            
+        }
+
+        await Task.destroy({
+            where: {
+                team_id: id
+            }
+        }, { transaction: t });
+
+        await Team_User.destroy({
+            where: {
+                team_id: id
+            }
+        }, { transaction: t });        
+
+        await Team.destroy({
+            where: {
+                id: id
+            }
+        }, { transaction: t });        
+
+        await t.commit();
+        res.send({
+            "message": "Deleted the team."
+        });
+    }
+    catch(err){
+        await t.rollback();
+        res.status(500).send({
+            status: "FAILURE",
+            message:
+                err.message || "DB error"
+        });
+    }
+};
+
 module.exports = {
     create,
     getAll,
-    getTeam
+    getTeam,
+    destroy
 }
