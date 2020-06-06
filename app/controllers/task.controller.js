@@ -36,8 +36,7 @@ async function create(req, res){
 
         if(data.assignee_id) {
             user = await User.findByPk(data.assignee_id);
-            email = user.email;
-            emailController.sendEmail(email, task);
+            emailController.sendEmail(user, task);
         }
 
         res.send(task);
@@ -218,8 +217,7 @@ async function update(req, res){
         // Send email to the new assignee
         if(data.assignee_id != prev_assignee_id) {
             user = await User.findByPk(data.assignee_id);
-            email = user.email;
-            emailController.sendEmail(email, task);
+            emailController.sendEmail(user, task);
         }
         
         await Task.update(data_task,{
@@ -380,6 +378,37 @@ async function findByTitle(req, res) {
     }
 };
 
+async function sendReminder(req, res) {
+    try {
+        var startDate = new Date();
+        var endDate = new Date();
+        startDate.setDate(new Date().getDate());
+        endDate.setDate(new Date().getDate()+1);
+        console.log(startDate);
+        console.log(endDate);
+
+        tasks = await Task.findAll({
+            where: {
+                due_date: {
+                    [Op.between]: [startDate, endDate]
+                }
+            }
+        });
+
+        for(var i=0; i<tasks.length; i++){
+            if(tasks[i].assignee_id){
+                user = await User.findByPk(tasks[i].assignee_id);
+                email = user.email;
+                // emailController.sendReminderEmail(user, tasks[i]);
+                console.log(tasks[i]);                
+            }
+        }
+
+        console.log("Reminder sent.")
+    } catch (error) {
+        console.log("Error in sendReminder function: ", error);
+    }
+}
 
 module.exports = {
     create,
@@ -388,5 +417,6 @@ module.exports = {
     update,
     destroy,
     findByTeam,
-    findByTitle
+    findByTitle,
+    sendReminder
 }

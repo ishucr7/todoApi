@@ -27,6 +27,7 @@ module.exports = app => {
     app.get("/api/user/tasks/search", [authJwt.verifyToken], tasks.findByTitle);
     
     // app.post("/api/email", email.send);
+    // app.get("/api/task", tasks.sendReminder);
 
     app.use('/api/user/tasks', [authJwt.verifyToken]);
     app.use('/api/user/tasks', router);
