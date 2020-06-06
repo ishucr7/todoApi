@@ -2,28 +2,28 @@ const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 const config = require("../config/email.config");
 
-var options = {
-    viewEngine: {
-        extName: '.hbs',
-        partialsDir: 'app/views',
-        layoutsDir: 'app/views',
-        defaultLayout: 'email.hbs',
-    },
-    viewPath: 'app/views',
-    extName: '.hbs'
-};
 
-
-async function sendEmail(email, task){
+async function sendEmail(user, task){
     const transport = nodemailer.createTransport(config);
+    var options = {
+        viewEngine: {
+            extName: '.hbs',
+            partialsDir: 'app/views',
+            layoutsDir: 'app/views',
+            defaultLayout: 'email.hbs',
+        },
+        viewPath: 'app/views',
+        extName: '.hbs'
+    };
     transport.use('compile', hbs(options));
 
     var mail = {
         from: 'admin@todoApp.com',
-        to: email,
-        subject: 'Test',
+        to: user.email,
+        subject: 'Task assigned',
         template: 'email',
         context: {
+            username: user.name,
             task_id: task.id,
             task_title: task.title,
             task_des: task.description
@@ -32,7 +32,6 @@ async function sendEmail(email, task){
 
     try {
         transport.sendMail(mail);
-        console.log("Email sent");
 
     } catch (error) {
         console.log("Email not sent due to ", error);
@@ -41,25 +40,44 @@ async function sendEmail(email, task){
 
 }
 
-// async function send(req, res){
-//     const data = req.body;
-//     try {
-//         sendEmail(data.email, data.task_id, data.task_name);
-//         res.send({
-//             message: 'Email sent successfully'
-//         });
-        
-//     } catch (error) {
-//         console.log(err.message);
-//         res.status(500).send({
-//             status: "FAILURE",
-//             message:
-//                 err.message || "DB error"
-//         });       
-//     }
-// }
+async function sendReminderEmail(user, task){
+    const transport = nodemailer.createTransport(config);
+    var options = {
+        viewEngine: {
+            extName: '.hbs',
+            partialsDir: 'app/views',
+            layoutsDir: 'app/views',
+            defaultLayout: 'reminder.hbs',
+        },
+        viewPath: 'app/views',
+        extName: '.hbs'
+    };
+    transport.use('compile', hbs(options));
+
+    var mail = {
+        from: 'admin@todoApp.com',
+        to: user.email,
+        subject: 'Reminder Email',
+        template: 'reminder',
+        context: {
+            username: user.name,
+            task_id: task.id,
+            task_title: task.title,
+            task_des: task.description
+        }
+    };
+
+    try {
+        transport.sendMail(mail);
+
+    } catch (error) {
+        console.log("Email not sent due to ", error);
+        return error;
+    }
+
+}
 
 module.exports = {
     sendEmail,
-    // send
+    sendReminderEmail
 };

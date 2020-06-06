@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const cron = require('node-cron')
 
 const app = express();
 
@@ -25,6 +26,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log("Drop and re-sync db.");
 // });
+
+// setup cron job
+// const taskController = require("./app/controllers/task.controller.js");
+// cron.schedule("30 12 * * *", function() {
+//   taskController.sendReminder();
+//   console.log("running a task every minute");
+// });
+
 
 app.get("/", (req, res) => {
   res.json({ message: "Url not supported" });
