@@ -94,7 +94,7 @@ async function getAll(req, res){
 
 async function destroy(req, res){
     id = req.params.id;
-
+    console.log("INSIDE COMMENT    DESTROY");
     try{
         await Comment.destroy({
             where: {
