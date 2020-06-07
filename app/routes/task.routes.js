@@ -33,4 +33,6 @@ module.exports = app => {
     // app.use('/api/user/tasks' );
     app.use('/api/user/tasks', router);
 
+    //  Remove users from all routes api/tasks/
+
   };

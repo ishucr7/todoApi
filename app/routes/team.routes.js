@@ -18,4 +18,6 @@ module.exports = app => {
     app.use('/api/user/teams', [authJwt.verifyToken]);
     app.use('/api/user/teams', router);
 
+    //  Remove users from all routes api/teams/
+
   };

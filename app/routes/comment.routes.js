@@ -12,11 +12,14 @@ module.exports = app => {
     
     // Get all comments for a task
     router.get("/:id", comments.getAll);    
+    // CHANGE TO api/task/:id/comments 
 
-    // Delete a task with id
+    // Delete a comment with id
     router.delete("/:id", comments.destroy);    
 
     app.use('/api/user/comments', [authJwt.verifyToken]);
     app.use('/api/user/comments', router);
+
+    //  Remove users from all routes api/comments/
 
   };
