@@ -8,7 +8,7 @@ const app = express();
 require('dotenv').config();
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "https://todo-app-main.herokuapp.com"
 };
 
 const db = require("./app/models/index.js");
