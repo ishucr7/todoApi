@@ -10,12 +10,13 @@ module.exports = app => {
     // Get all teams for a user
     router.get("/", teams.getAll);    
     
+    // Get the details of a team
     router.get("/:id", teams.getTeam);   
 
     // Delete a team with id
     router.delete("/:id", teams.destroy);
 
-    app.use('/api/user/teams', [authJwt.verifyToken]);
-    app.use('/api/user/teams', router);
+    app.use('/api/teams', [authJwt.verifyToken]);
+    app.use('/api/teams', router);
 
   };

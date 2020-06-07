@@ -24,13 +24,12 @@ module.exports = app => {
     app.get("/api/teams/:id/tasks", [authJwt.verifyToken], tasks.findByTeam);
 
     // Search task by title
-    app.get("/api/user/tasks/search", [authJwt.verifyToken], tasks.findByTitle);
+    app.get("/api/tasks/search", [authJwt.verifyToken], tasks.findByTitle);
     
     // app.post("/api/email", email.send);
     // app.get("/api/task", tasks.sendReminder);
 
-    app.use('/api/user/tasks', [authJwt.verifyToken]);
-    // app.use('/api/user/tasks' );
-    app.use('/api/user/tasks', router);
+    app.use('/api/tasks', [authJwt.verifyToken]);
+    app.use('/api/tasks', router);
 
   };
