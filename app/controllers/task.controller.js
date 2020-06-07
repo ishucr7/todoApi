@@ -416,7 +416,7 @@ async function sendReminder(req, res) {
             if(tasks[i].assignee_id){
                 user = await User.findByPk(tasks[i].assignee_id);
                 email = user.email;
-                // emailController.sendReminderEmail(user, tasks[i]);
+                emailController.sendReminderEmail(user, tasks[i]);
                 console.log(tasks[i]);                
             }
         }
