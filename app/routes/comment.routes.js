@@ -11,7 +11,7 @@ module.exports = app => {
     router.put("/:id", comments.update);    
     
     // Get all comments for a task
-    app.get("api/task/:id/comments", comments.getAll);    
+    app.get("/api/task/:id/comments", comments.getAll);    
 
     // Delete a comment with id
     router.delete("/:id", comments.destroy);    
